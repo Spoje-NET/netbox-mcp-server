@@ -1,5 +1,11 @@
-netbox-mcp-server (1.2.1-1) UNRELEASED; urgency=low
+mcp-server-netbox (1.2.2-1) unstable; urgency=low
 
+  [ Vítězslav Dvořák ]
   * Initial Debian packaging.
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 13 Jul 2026 19:41:14 +0200
+  [ vitex ]
+  * Rename source/binary package from netbox-mcp-server to mcp-server-
+    netbox, matching the mcp-server-<name> convention, with a new
+    mcprack-mcp-server-netbox companion package.
+
+ -- vitex <info@vitexsoftware.cz>  Thu, 27 Aug 2026 15:26:18 +0200

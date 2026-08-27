@@ -1,4 +1,4 @@
-Source: netbox-mcp-server
+Source: mcp-server-netbox
 Section: net
 Priority: optional
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
@@ -16,11 +16,11 @@ Build-Depends:
  python3-pydantic-settings,
 Standards-Version: 4.7.0
 Homepage: https://github.com/netboxlabs/netbox-mcp-server
-Vcs-Git: https://github.com/Spoje-NET/netbox-mcp-server.git
-Vcs-Browser: https://github.com/Spoje-NET/netbox-mcp-server
+Vcs-Git: https://github.com/Spoje-NET/mcp-server-netbox.git
+Vcs-Browser: https://github.com/Spoje-NET/mcp-server-netbox
 Rules-Requires-Root: no
 
-Package: netbox-mcp-server
+Package: mcp-server-netbox
 Architecture: all
 Depends:
  ${misc:Depends},
@@ -30,6 +30,9 @@ Depends:
  python3-httpx (>= 0.28.1),
  python3-pydantic (>= 2.13.4),
  python3-pydantic-settings,
+Provides: netbox-mcp-server
+Replaces: netbox-mcp-server (<< 1.2.2~)
+Breaks: netbox-mcp-server (<< 1.2.2~)
 Description: read-only MCP server for NetBox infrastructure data
  A read-only Model Context Protocol (MCP) server that enables LLMs to
  interact with NetBox infrastructure data. Built with FastMCP, it exposes
@@ -39,3 +42,14 @@ Description: read-only MCP server for NetBox infrastructure data
  Only GET operations are exposed; no create/update/delete tools are
  provided. Connection details are supplied via NETBOX_URL and
  NETBOX_TOKEN environment variables.
+
+Package: mcprack-mcp-server-netbox
+Architecture: all
+Depends:
+ ${misc:Depends},
+ mcprack (>= 1.5.1),
+ mcp-server-netbox (= ${binary:Version}),
+Description: Registers NetBox MCP server into mcprack catalog
+ Companion package for mcp-server-netbox. Installing it registers
+ the netbox-mcp-server binary as an available MCP server in the
+ local mcprack instance; removing it unregisters it again.
