@@ -7,7 +7,7 @@ String[] distributions = [
 			//                    // python3-pydantic (>= 2.13.4), and python3-pydantic-settings
 			//                    // are not installable on bookworm. Re-enable once backported.
 			'debian:trixie',
-			'debian:forky',
+			// 'debian:forky', // Disabled: debian:forky excluded until deps are available
 			// 'ubuntu:jammy', // Disabled: same missing python3-fastmcp/pydantic/pydantic-settings
 			//                 // versions as bookworm. Re-enable once backported.
 			// 'ubuntu:noble', // Disabled: same missing python3-fastmcp/pydantic/pydantic-settings
