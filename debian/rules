@@ -13,6 +13,8 @@ override_dh_auto_install:
 	    --version-string="$(shell dpkg-parsechangelog -S Version | sed 's/-.*//')" \
 	    debian/mcp-server-netbox/usr/bin/netbox-mcp-server \
 	    -o debian/netbox-mcp-server.1
+	sed 's/netbox-mcp-server/mcp-server-netbox/g; s/NETBOX-MCP-SERVER/MCP-SERVER-NETBOX/g' \
+	    debian/netbox-mcp-server.1 > debian/mcp-server-netbox.1
 	install -D -m 644 debian/mcp-server-netbox.metainfo.xml \
 	    debian/mcp-server-netbox/usr/share/metainfo/cz.vitexsoftware.netbox-mcp-server.metainfo.xml
 	install -D -m 644 debian/mcp-server-netbox.svg \

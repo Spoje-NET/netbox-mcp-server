@@ -9,13 +9,23 @@ from typing import Annotated, Any
 import httpx
 from fastmcp import FastMCP
 from fastmcp.server.auth import AccessToken, TokenVerifier
+from mcp.types import ToolAnnotations
 from pydantic import Field, SecretStr, ValidationError
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
+from netbox_mcp_server import __version__
 from netbox_mcp_server.config import Settings, configure_logging
 from netbox_mcp_server.netbox_client import NetBoxRestClient
 from netbox_mcp_server.netbox_types import NETBOX_OBJECT_TYPES
+
+# NetBox access is read-only by design (see NetBoxRestClient); every tool is a query.
+READ_ONLY_ANNOTATIONS = ToolAnnotations(
+    read_only_hint=True,
+    destructive_hint=False,
+    idempotent_hint=True,
+    open_world_hint=True,
+)
 
 
 def parse_cli_args() -> dict[str, Any]:
@@ -28,6 +38,11 @@ def parse_cli_args() -> dict[str, Any]:
     parser = argparse.ArgumentParser(
         description="NetBox MCP Server - Model Context Protocol server for NetBox",
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
 
     # Core NetBox settings
@@ -289,6 +304,8 @@ def validate_filters(filters: dict) -> None:
 
 
 @mcp.tool(
+    title="Get NetBox Objects",
+    annotations=READ_ONLY_ANNOTATIONS,
     description="""
     Get objects from NetBox based on their type and filters
 
@@ -370,13 +387,29 @@ def validate_filters(filters: dict) -> None:
     """
 )
 def netbox_get_objects(
-    object_type: str,
-    filters: dict,
-    fields: list[str] | None = None,
-    brief: bool = False,
-    limit: Annotated[int, Field(default=5, ge=1, le=100)] = 5,
-    offset: Annotated[int, Field(default=0, ge=0)] = 0,
-    ordering: str | list[str] | None = None,
+    object_type: Annotated[
+        str, Field(description="NetBox object type, e.g. 'dcim.device' or 'ipam.vlan'")
+    ],
+    filters: Annotated[
+        dict, Field(description="Filter parameters passed to the NetBox API (empty dict for none)")
+    ],
+    fields: Annotated[
+        list[str] | None,
+        Field(description="Field names to return per object; omit for the default field set"),
+    ] = None,
+    brief: Annotated[
+        bool, Field(description="Return a minimal representation of each object")
+    ] = False,
+    limit: Annotated[
+        int, Field(default=5, ge=1, le=100, description="Maximum number of results (1-100)")
+    ] = 5,
+    offset: Annotated[
+        int, Field(default=0, ge=0, description="Number of results to skip for pagination")
+    ] = 0,
+    ordering: Annotated[
+        str | list[str] | None,
+        Field(description="Field(s) to sort by; prefix with '-' for descending order"),
+    ] = None,
 ):
     """
     Get objects from NetBox based on their type and filters
@@ -413,12 +446,22 @@ def netbox_get_objects(
     return netbox.get(endpoint, params=params, fallback_endpoint=fallback)
 
 
-@mcp.tool
+@mcp.tool(
+    title="Get NetBox Object by ID",
+    annotations=READ_ONLY_ANNOTATIONS,
+)
 def netbox_get_object_by_id(
-    object_type: str,
-    object_id: int,
-    fields: list[str] | None = None,
-    brief: bool = False,
+    object_type: Annotated[
+        str, Field(description="NetBox object type, e.g. 'dcim.device' or 'ipam.vlan'")
+    ],
+    object_id: Annotated[int, Field(description="Numeric ID of the object")],
+    fields: Annotated[
+        list[str] | None,
+        Field(description="Field names to return; omit for the default field set"),
+    ] = None,
+    brief: Annotated[
+        bool, Field(description="Return a minimal representation of the object")
+    ] = False,
 ):
     """
     Get detailed information about a specific NetBox object by its ID.
@@ -466,8 +509,16 @@ def netbox_get_object_by_id(
     return netbox.get(full_endpoint, params=params, fallback_endpoint=full_fallback)
 
 
-@mcp.tool
-def netbox_get_changelogs(filters: dict):
+@mcp.tool(
+    title="Get NetBox Changelogs",
+    annotations=READ_ONLY_ANNOTATIONS,
+)
+def netbox_get_changelogs(
+    filters: Annotated[
+        dict,
+        Field(description="Changelog filters (e.g. user, changed_object_type, time_after)"),
+    ],
+):
     """
     Get object change records (changelogs) from NetBox based on filters.
 
@@ -529,6 +580,8 @@ def netbox_get_changelogs(filters: dict):
 
 
 @mcp.tool(
+    title="Search NetBox Objects",
+    annotations=READ_ONLY_ANNOTATIONS,
     description="""
     Perform global search across NetBox infrastructure.
 
@@ -579,10 +632,18 @@ def netbox_get_changelogs(filters: dict):
     """
 )
 def netbox_search_objects(
-    query: str,
-    object_types: list[str] | None = None,
-    fields: list[str] | None = None,
-    limit: Annotated[int, Field(default=5, ge=1, le=100)] = 5,
+    query: Annotated[str, Field(description="Search term matched across NetBox objects")],
+    object_types: Annotated[
+        list[str] | None,
+        Field(description="Object types to search; omit to search the common default types"),
+    ] = None,
+    fields: Annotated[
+        list[str] | None,
+        Field(description="Field names to return per result; omit for the default field set"),
+    ] = None,
+    limit: Annotated[
+        int, Field(default=5, ge=1, le=100, description="Maximum results per object type (1-100)")
+    ] = 5,
 ) -> dict[str, list[dict]]:
     """
     Perform global search across NetBox infrastructure.

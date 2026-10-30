@@ -2,6 +2,17 @@
 
 <!-- version list -->
 
+## Unreleased (Debian 1.2.2-1)
+
+### Features
+
+- Every tool now has a human-readable title, parameter descriptions and explicit
+  read-only `ToolAnnotations`.
+- Add `--version` and the `mcp-server-netbox` console script (the
+  `netbox-mcp-server` name is kept as a compatibility alias).
+- Add `server.json` (environment variable manifest for mcprack), `SKILL.md` and
+  `lhm.plugin.json`.
+
 ## v1.2.1 (2026-06-17)
 
 ### Bug Fixes

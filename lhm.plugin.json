@@ -1,0 +1,10 @@
+{
+  "author": "CyberVitexus",
+  "authorUrl": "https://github.com/VitexSoftware",
+  "category": "developer",
+  "description": "Read-only MCP (Model Context Protocol) server for NetBox. Provides tools to search and read DCIM, IPAM, circuits, virtualization, tenancy, VPN and wireless objects and their changelogs.",
+  "homepage": "https://github.com/Spoje-NET/netbox-mcp-server",
+  "identifier": "vitexsoftware-mcp-server-netbox",
+  "name": "NetBox MCP Server",
+  "prompts": []
+}

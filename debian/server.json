@@ -1,0 +1,68 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "cz.vitexsoftware/mcp-server-netbox",
+  "description": "Read-only MCP server for NetBox infrastructure data (DCIM, IPAM, circuits, virtualization, tenancy, VPN, wireless).",
+  "environmentVariables": [
+    {
+      "name": "NETBOX_URL",
+      "description": "Base URL of the NetBox instance (e.g. https://netbox.example.com/).",
+      "isRequired": true
+    },
+    {
+      "name": "NETBOX_TOKEN",
+      "description": "NetBox API token used for authentication.",
+      "isRequired": true,
+      "isSecret": true
+    },
+    {
+      "name": "TRANSPORT",
+      "description": "MCP transport protocol. mcprack always uses stdio.",
+      "default": "stdio",
+      "choices": ["stdio", "http"]
+    },
+    {
+      "name": "HOST",
+      "description": "Host address to bind the HTTP server (only used when TRANSPORT=http).",
+      "default": "127.0.0.1"
+    },
+    {
+      "name": "PORT",
+      "description": "Port to bind the HTTP server (only used when TRANSPORT=http).",
+      "default": "8000"
+    },
+    {
+      "name": "MCP_AUTH_TOKEN",
+      "description": "Bearer token required on the HTTP transport endpoint (only used when TRANSPORT=http).",
+      "isSecret": true
+    },
+    {
+      "name": "VERIFY_SSL",
+      "description": "Verify SSL certificates when connecting to NetBox.",
+      "default": "true",
+      "choices": ["true", "false"]
+    },
+    {
+      "name": "NETBOX_TIMEOUT",
+      "description": "Request timeout in seconds for calls to the NetBox API.",
+      "default": "30.0"
+    },
+    {
+      "name": "NETBOX_READONLY",
+      "description": "Guard the REST client against write operations (no MCP tool performs writes).",
+      "default": "true",
+      "choices": ["true", "false"]
+    },
+    {
+      "name": "ENABLE_PLUGIN_DISCOVERY",
+      "description": "Auto-discover NetBox plugin object types at startup.",
+      "default": "false",
+      "choices": ["true", "false"]
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity.",
+      "default": "INFO",
+      "choices": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    }
+  ]
+}

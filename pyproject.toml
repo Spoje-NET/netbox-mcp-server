@@ -16,6 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
+mcp-server-netbox = "netbox_mcp_server.server:main"
 netbox-mcp-server = "netbox_mcp_server.server:main"
 
 [dependency-groups]

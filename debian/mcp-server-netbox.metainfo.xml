@@ -21,6 +21,7 @@
   </description>
   <icon type="stock">cz.vitexsoftware.netbox-mcp-server</icon>
   <provides>
+    <binary>mcp-server-netbox</binary>
     <binary>netbox-mcp-server</binary>
   </provides>
   <categories>
@@ -33,6 +34,7 @@
     <name>VitexSoftware</name>
   </developer>
   <releases>
+    <release version="1.2.2" date="2026-08-27"/>
     <release version="1.2.1" date="2026-06-17"/>
   </releases>
   <content_rating type="oars-1.1"/>

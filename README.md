@@ -19,12 +19,27 @@ For chat, use cases, and general MCP discussion, join the NetBox community at [n
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| get_objects | Retrieves NetBox core objects based on their type and filters |
-| get_object_by_id | Gets detailed information about a specific NetBox object by its ID |
-| get_changelogs | Retrieves change history records (audit trail) based on filters |
-| search_objects | Cross-type text search across NetBox object types |
+| Tool | Annotation class | Description |
+|------|------------------|-------------|
+| `netbox_get_objects` | READ_ONLY | Retrieves NetBox core objects based on their type and filters |
+| `netbox_get_object_by_id` | READ_ONLY | Gets detailed information about a specific NetBox object by its ID |
+| `netbox_get_changelogs` | READ_ONLY | Retrieves change history records (audit trail) based on filters |
+| `netbox_search_objects` | READ_ONLY | Cross-type text search across NetBox object types |
+
+All tools carry a title and explicit `ToolAnnotations` (`read_only_hint=True`, `destructive_hint=False`,
+`idempotent_hint=True`, `open_world_hint=True`). The server only issues GET requests, so it is read-only by
+design and has no separate read-only switch.
+
+### Debian / mcprack
+
+```sh
+sudo apt install mcp-server-netbox            # server: /usr/bin/mcp-server-netbox (alias: netbox-mcp-server)
+sudo apt install mcprack-mcp-server-netbox    # registers the server in the local mcprack catalog
+```
+
+Secrets (`NETBOX_TOKEN`, `MCP_AUTH_TOKEN`) are provided through the environment (mcprack injects them from
+Vaultwarden), never as command-line arguments. `NETBOX_URL` is not secret. The full variable manifest used by
+mcprack is installed at `/usr/share/mcp-server-netbox/server.json`.
 
 > Note: Core NetBox object types are always available. Plugin object types can be auto-discovered. See [Plugin Object Type Discovery](#plugin-object-type-discovery). Advanced features (GraphQL, dynamic model discovery, etc.) are deliberately out of scope. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full scope statement and rationale.
 

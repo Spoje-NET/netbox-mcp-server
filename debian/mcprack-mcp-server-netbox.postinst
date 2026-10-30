@@ -8,7 +8,7 @@ case "$1" in
         mcprack server create mcp-server-netbox \
           --label 'NetBox MCP Server' \
           --transport stdio \
-          --command /usr/bin/netbox-mcp-server \
+          --command /usr/bin/mcp-server-netbox \
           --category debian \
           --enabled" || true
     fi
