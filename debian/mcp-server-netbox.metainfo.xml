@@ -20,6 +20,7 @@
     </p>
   </description>
   <icon type="stock">cz.vitexsoftware.netbox-mcp-server</icon>
+  <pkgname>mcp-server-netbox</pkgname>
   <provides>
     <binary>mcp-server-netbox</binary>
     <binary>netbox-mcp-server</binary>
